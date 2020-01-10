@@ -1,0 +1,27 @@
+diff --git a/activity/activity.info b/activity/activity.info
+index c30b524..5eb8803 100644
+--- a/activity/activity.info
++++ b/activity/activity.info
+@@ -1,12 +1,19 @@
+ [Activity]
+ name = Read ETexts
+-bundle_id = org.laptop.sugar.ReadEtextsActivity
++bundle_id = org.sugarlabs.ReadETexts
++metadata_license = CC0-1.0
++release_date = 2020-01-07
+ license = GPLv2+;LGPLv2+
+ icon = read-etexts
+ exec = sugar-activity3 ReadEtextsActivity.ReadEtextsActivity
+ show_launcher = yes
+ activity_version = 27
+ mime_types = text/plain;application/zip;application/rtf
+-summary = Download and read thousands of free e-books in plain text format from Project Gutenberg!
+-tags = Language;Tools
++summary = Read thousands of free e-books
++description = Read ETexts lets you read all the free e-texts from Project Gutenberg, or use Text to Speech to have them read to you. The built in offline catalog search lets you browse through and download over 30,000 great titles. format from Project Gutenberg!
++tags = Education
++url = https://help.sugarlabs.org/en/read_etexts.html
++update_contact = tch@sugarlabs.org
++developer_name = Sugar Labs Community
++screenshots = http://activities.sugarlabs.org/en-US/sugar/images/p/815/1335020254
+ repository = https://github.com/sugarlabs/readetexts
