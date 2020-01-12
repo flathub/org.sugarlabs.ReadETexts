@@ -1,5 +1,5 @@
 diff --git a/ReadEtextsActivity.py b/ReadEtextsActivity.py
-index e8b8022..bd13e40 100644
+index e8b8022..42283c7 100644
 --- a/ReadEtextsActivity.py
 +++ b/ReadEtextsActivity.py
 @@ -23,6 +23,7 @@ import rtfconvert
@@ -59,15 +59,6 @@ index e8b8022..bd13e40 100644
          self.port = 1024 + (h % 64511)
  
          self.is_received_document = False
-@@ -337,7 +338,7 @@ class ReadEtextsActivity(activity.Activity):
-                 self.connect("joined", self.joined_cb)
-         elif self.object_id is None:
-             # Not joining, not resuming
--            f = open("help.txt", "r")
-+            f = open('help.txt', 'r')
-             line = ''
-             label_text = ''
-             while True:
 @@ -355,12 +356,12 @@ class ReadEtextsActivity(activity.Activity):
  
      def close(self, **kwargs):
@@ -150,17 +141,44 @@ index e8b8022..bd13e40 100644
  
      def can_close(self):
          self.close_requested = True
-@@ -1186,7 +1164,8 @@ class ReadEtextsActivity(activity.Activity):
-                 'You must enter at least one search word.'))
-             self.books_toolbar.search_entry.grab_focus()
-             return
--        f = open('bookcatalog.txt', 'rb')
-+        script_dir = os.path.dirname(os.path.realpath(__file__))
-+        f = open(os.path.join(script_dir, 'bookcatalog.txt'), 'rb')
-         while f:
-             line = f.readline().decode('iso-8859-1')
-             if not line:
-@@ -1304,30 +1283,13 @@ class ReadEtextsActivity(activity.Activity):
+@@ -1165,13 +1143,13 @@ class ReadEtextsActivity(activity.Activity):
+         tv = selection.get_tree_view()
+         model = tv.get_model()
+         sel = selection.get_selected()
+-        print(sel)
+         if sel:
+             model, _iter = sel
+-            self.selected_title = model.get_value(_iter, COLUMN_TITLE)
+-            self.selected_author = model.get_value(_iter, COLUMN_AUTHOR)
+-            self.selected_path = model.get_value(_iter, COLUMN_PATH)
+-            self.books_toolbar.enable_button(True)
++            if _iter:
++                self.selected_title = model.get_value(_iter, COLUMN_TITLE)
++                self.selected_author = model.get_value(_iter, COLUMN_AUTHOR)
++                self.selected_path = model.get_value(_iter, COLUMN_PATH)
++                self.books_toolbar.enable_button(True)
+ 
+     def find_books(self, search_text):
+         self.clear_downloaded_bytes()
+@@ -1238,13 +1216,13 @@ class ReadEtextsActivity(activity.Activity):
+         logger.debug("Starting download to %s...", path)
+         try:
+             getter.start(path)
++            self.download_content_length = getter.get_content_length()
++            self.download_content_type = getter.get_content_type()
++            self.textview.grab_focus()
+         except:
+             self.alert(_('Error'), _(
+                 'Connection timed out for ') + self.selected_title)
+-
+-        self.download_content_length = getter.get_content_length()
+-        self.download_content_type = getter.get_content_type()
+-        self.textview.grab_focus()
++            self.get_book_error_cb(getter, _('Connection timed out for ') + self.selected_title)
+ 
+     def get_iso_book_result_cb(self, getter, tempfile, suggested_name):
+         if self.download_content_type.startswith('text/html'):
+@@ -1304,30 +1282,13 @@ class ReadEtextsActivity(activity.Activity):
          self.tempfile = tempfile
          file_path = os.path.join(self.get_activity_root(), 'instance',
                                   '%i' % time.time())
