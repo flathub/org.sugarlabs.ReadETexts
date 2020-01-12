@@ -1,5 +1,5 @@
 diff --git a/ReadEtextsActivity.py b/ReadEtextsActivity.py
-index e8b8022..d7b5d3c 100644
+index e8b8022..bd13e40 100644
 --- a/ReadEtextsActivity.py
 +++ b/ReadEtextsActivity.py
 @@ -23,6 +23,7 @@ import rtfconvert
@@ -59,17 +59,16 @@ index e8b8022..d7b5d3c 100644
          self.port = 1024 + (h % 64511)
  
          self.is_received_document = False
-@@ -337,7 +338,8 @@ class ReadEtextsActivity(activity.Activity):
+@@ -337,7 +338,7 @@ class ReadEtextsActivity(activity.Activity):
                  self.connect("joined", self.joined_cb)
          elif self.object_id is None:
              # Not joining, not resuming
 -            f = open("help.txt", "r")
-+            script_dir = os.path.dirname(os.path.realpath(__file__))
-+            f = open(os.path.join(script_dir, 'help.txt'), 'r')
++            f = open('help.txt', 'r')
              line = ''
              label_text = ''
              while True:
-@@ -355,12 +357,12 @@ class ReadEtextsActivity(activity.Activity):
+@@ -355,12 +356,12 @@ class ReadEtextsActivity(activity.Activity):
  
      def close(self, **kwargs):
          self.speech_toolbar.stop()
@@ -84,7 +83,7 @@ index e8b8022..d7b5d3c 100644
          toolbar_box.toolbar.insert(activity_button, 0)
          activity_button.show()
  
-@@ -972,7 +974,7 @@ class ReadEtextsActivity(activity.Activity):
+@@ -972,7 +973,7 @@ class ReadEtextsActivity(activity.Activity):
          logger.debug('ReadEtextsActivity.read_file: %s', file_path)
          tempfile = os.path.join(self.get_activity_root(),
                                  'instance', 'tmp%i' % time.time())
@@ -93,7 +92,7 @@ index e8b8022..d7b5d3c 100644
          self.tempfile = tempfile
          self.load_document(self.tempfile)
  
-@@ -1118,43 +1120,20 @@ class ReadEtextsActivity(activity.Activity):
+@@ -1118,43 +1119,20 @@ class ReadEtextsActivity(activity.Activity):
  
      def write_file(self, filename):
          "Save meta data for the file."
@@ -151,7 +150,7 @@ index e8b8022..d7b5d3c 100644
  
      def can_close(self):
          self.close_requested = True
-@@ -1186,7 +1165,8 @@ class ReadEtextsActivity(activity.Activity):
+@@ -1186,7 +1164,8 @@ class ReadEtextsActivity(activity.Activity):
                  'You must enter at least one search word.'))
              self.books_toolbar.search_entry.grab_focus()
              return
@@ -161,7 +160,7 @@ index e8b8022..d7b5d3c 100644
          while f:
              line = f.readline().decode('iso-8859-1')
              if not line:
-@@ -1304,30 +1284,13 @@ class ReadEtextsActivity(activity.Activity):
+@@ -1304,30 +1283,13 @@ class ReadEtextsActivity(activity.Activity):
          self.tempfile = tempfile
          file_path = os.path.join(self.get_activity_root(), 'instance',
                                   '%i' % time.time())
