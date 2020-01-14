@@ -1,5 +1,5 @@
 diff --git a/ReadEtextsActivity.py b/ReadEtextsActivity.py
-index e8b8022..42283c7 100644
+index e8b8022..17654c0 100644
 --- a/ReadEtextsActivity.py
 +++ b/ReadEtextsActivity.py
 @@ -23,6 +23,7 @@ import rtfconvert
@@ -74,6 +74,24 @@ index e8b8022..42283c7 100644
          toolbar_box.toolbar.insert(activity_button, 0)
          activity_button.show()
  
+@@ -630,7 +631,7 @@ class ReadEtextsActivity(activity.Activity):
+         textbuffer = self.textview.get_buffer()
+         begin, end = textbuffer.get_selection_bounds()
+         copy_text = textbuffer.get_text(begin, end, True)
+-        self.clipboard.set_text(copy_text)
++        self.clipboard.set_text(copy_text, len(copy_text))
+ 
+     def view_toolbar_go_fullscreen_cb(self, view_toolbar):
+         self.fullscreen()
+@@ -917,7 +918,7 @@ class ReadEtextsActivity(activity.Activity):
+         linecount = 0
+         label_text = '\n\n\n'
+         while linecount < PAGE_SIZE:
+-            line = self.etext_file.readline()
++            line = self.etext_file.readline().decode('iso-8859-1')
+             if not line:
+                 break
+             else:
 @@ -972,7 +973,7 @@ class ReadEtextsActivity(activity.Activity):
          logger.debug('ReadEtextsActivity.read_file: %s', file_path)
          tempfile = os.path.join(self.get_activity_root(),
@@ -210,6 +228,16 @@ index e8b8022..42283c7 100644
          self.alert(_('Success'), self.selected_title + _(' added to Journal.'))
  
      def find_previous(self):
+@@ -1366,7 +1327,8 @@ class ReadEtextsActivity(activity.Activity):
+         self.current_found_item = -1
+         self.etext_file.seek(0)
+         while self.etext_file:
+-            line = str(self.etext_file.readline())
++            line = str(self.etext_file.readline().decode('iso-8859-1'))
++            print(line)
+             line_length = len(line)
+             if not line:
+                 break
 diff --git a/readtoolbar.py b/readtoolbar.py
 index 9e9b24e..d732567 100644
 --- a/readtoolbar.py
