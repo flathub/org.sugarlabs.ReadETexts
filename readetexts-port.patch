@@ -1,5 +1,5 @@
 diff --git a/ReadEtextsActivity.py b/ReadEtextsActivity.py
-index e8b8022..17654c0 100644
+index e8b8022..acfc38a 100644
 --- a/ReadEtextsActivity.py
 +++ b/ReadEtextsActivity.py
 @@ -23,6 +23,7 @@ import rtfconvert
@@ -228,13 +228,12 @@ index e8b8022..17654c0 100644
          self.alert(_('Success'), self.selected_title + _(' added to Journal.'))
  
      def find_previous(self):
-@@ -1366,7 +1327,8 @@ class ReadEtextsActivity(activity.Activity):
+@@ -1366,7 +1327,7 @@ class ReadEtextsActivity(activity.Activity):
          self.current_found_item = -1
          self.etext_file.seek(0)
          while self.etext_file:
 -            line = str(self.etext_file.readline())
 +            line = str(self.etext_file.readline().decode('iso-8859-1'))
-+            print(line)
              line_length = len(line)
              if not line:
                  break

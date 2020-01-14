@@ -1,5 +1,5 @@
 diff --git a/ReadEtextsActivity.py b/ReadEtextsActivity.py
-index 17654c0..61cff48 100644
+index acfc38a..ab3292c 100644
 --- a/ReadEtextsActivity.py
 +++ b/ReadEtextsActivity.py
 @@ -73,6 +73,7 @@ class Annotations():
