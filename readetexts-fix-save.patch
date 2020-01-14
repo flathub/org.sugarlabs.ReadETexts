@@ -1,8 +1,16 @@
 diff --git a/ReadEtextsActivity.py b/ReadEtextsActivity.py
-index 0e0323a..faeb5bc 100644
+index 42283c7..faeb5bc 100644
 --- a/ReadEtextsActivity.py
 +++ b/ReadEtextsActivity.py
-@@ -74,6 +74,7 @@ class Annotations():
+@@ -22,6 +22,7 @@ import pgconvert
+ import rtfconvert
+ import xopower
+ import speech
++import urllib.error
+ import pickle as pickle
+ import shutil
+ from gi.repository import TelepathyGLib
+@@ -73,6 +74,7 @@ class Annotations():
          self.bookmarks = []
          self.highlights = {0:  []}
          self.pickle_file_name = pickle_file_name
@@ -10,7 +18,7 @@ index 0e0323a..faeb5bc 100644
  
      def get_title(self):
          return self.title
-@@ -126,6 +127,12 @@ class Annotations():
+@@ -125,6 +127,12 @@ class Annotations():
          if tuples_list == []:
              del self.highlights[page]
  
@@ -23,7 +31,7 @@ index 0e0323a..faeb5bc 100644
      def restore(self):
          if os.path.exists(self.pickle_file_name):
              pickle_input = open(self.pickle_file_name,  'rb')
-@@ -133,6 +140,7 @@ class Annotations():
+@@ -132,6 +140,7 @@ class Annotations():
              self.bookmarks = pickle.load(pickle_input)
              self.notes = pickle.load(pickle_input)
              self.highlights = pickle.load(pickle_input)
@@ -31,7 +39,7 @@ index 0e0323a..faeb5bc 100644
              pickle_input.close()
  
      def save(self):
-@@ -141,6 +149,7 @@ class Annotations():
+@@ -140,6 +149,7 @@ class Annotations():
          pickle.dump(self.bookmarks,  pickle_output)
          pickle.dump(self.notes,  pickle_output)
          pickle.dump(self.highlights,  pickle_output)
@@ -39,7 +47,7 @@ index 0e0323a..faeb5bc 100644
          pickle_output.close()
  
  
-@@ -302,9 +311,7 @@ class ReadEtextsActivity(SugarCompatibleActivity):
+@@ -301,9 +311,7 @@ class ReadEtextsActivity(SugarCompatibleActivity):
          self.underline_tag.set_property('foreground', 'black')
          self.underline_tag.set_property('background', 'yellow')
  
@@ -50,7 +58,7 @@ index 0e0323a..faeb5bc 100644
  
          xopower.setup_idle_timeout()
          if xopower.service_activated:
-@@ -854,6 +861,7 @@ class ReadEtextsActivity(SugarCompatibleActivity):
+@@ -853,6 +861,7 @@ class ReadEtextsActivity(SugarCompatibleActivity):
          self.current_page = page
          self.update_nav_buttons()
          self.page = page
@@ -58,7 +66,7 @@ index 0e0323a..faeb5bc 100644
  
      def show_page(self, page_number):
          self.show_bookmark_state()
-@@ -982,38 +990,12 @@ class ReadEtextsActivity(SugarCompatibleActivity):
+@@ -981,38 +990,12 @@ class ReadEtextsActivity(SugarCompatibleActivity):
          partition_tuple = filename.rpartition('/')
          return partition_tuple[2]
  
@@ -101,7 +109,7 @@ index 0e0323a..faeb5bc 100644
          if zipfile.is_zipfile(filename):
              self.zf = zipfile.ZipFile(filename, 'r')
              self.book_files = self.zf.namelist()
-@@ -1071,7 +1053,7 @@ class ReadEtextsActivity(SugarCompatibleActivity):
+@@ -1070,7 +1053,7 @@ class ReadEtextsActivity(SugarCompatibleActivity):
              self.metadata['title'] = self.annotations.get_title()
              self.metadata['title_set_by_user'] = '1'
  
@@ -110,7 +118,7 @@ index 0e0323a..faeb5bc 100644
          self.show_page(self.page)
          self.set_total_pages(pagecount + 1)
          self.set_current_page(self.page)
-@@ -1084,6 +1066,10 @@ class ReadEtextsActivity(SugarCompatibleActivity):
+@@ -1083,6 +1066,10 @@ class ReadEtextsActivity(SugarCompatibleActivity):
              self.watch_for_tubes()
              self.share_document()
  
@@ -121,7 +129,7 @@ index 0e0323a..faeb5bc 100644
      def rewrite_zip(self):
          if zipfile.is_zipfile(self.tempfile):
              new_zipfile = os.path.join(self.get_activity_root(), 'instance',
-@@ -1133,7 +1119,6 @@ class ReadEtextsActivity(SugarCompatibleActivity):
+@@ -1132,7 +1119,6 @@ class ReadEtextsActivity(SugarCompatibleActivity):
              # Remove all temporary files
              instance_path = os.path.join(self.get_activity_root(), 'instance')
              shutil.rmtree(instance_path, ignore_errors=True, onerror=None)
@@ -129,3 +137,44 @@ index 0e0323a..faeb5bc 100644
  
      def can_close(self):
          self.close_requested = True
+@@ -1187,6 +1173,7 @@ class ReadEtextsActivity(SugarCompatibleActivity):
+         self.list_scroller_visible = True
+ 
+     def get_book(self):
++        self.retry = 0
+         self.progressbar.show()
+         self.books_toolbar.enable_button(False)
+         self.list_scroller.props.sensitive = False
+@@ -1202,7 +1189,7 @@ class ReadEtextsActivity(SugarCompatibleActivity):
+                              self.get_old_book_result_cb)
+         else:
+             logger.debug("http://www.gutenberg.org/dirs" +
+-                         self.selected_path + "-8.zip")
++                         self.selected_path + ".zip")
+             GObject.idle_add(self.download_book,  "http://www.gutenberg.org/dirs" + self.selected_path + "-8.zip",
+                              self.get_iso_book_result_cb)
+ 
+@@ -1219,12 +1206,23 @@ class ReadEtextsActivity(SugarCompatibleActivity):
+             self.download_content_length = getter.get_content_length()
+             self.download_content_type = getter.get_content_type()
+             self.textview.grab_focus()
++        except urllib.error.HTTPError as e:
++            self.retry +=1
++            if '.zip' in url and self.retry <= 2:
++                self.download_book("http://www.gutenberg.org/dirs" +
++                               self.selected_path + ".zip",  self.get_book_result_cb)
++            else:
++                self.retry = 0
++                self.alert(_('Error'), _(
++                    'Connection timed out for ') + self.selected_title)
++                self.get_book_error_cb(getter, _("Couldn't find ") + self.selected_title + _('Error') + str(e))
+         except:
+             self.alert(_('Error'), _(
+                 'Connection timed out for ') + self.selected_title)
+             self.get_book_error_cb(getter, _('Connection timed out for ') + self.selected_title)
+ 
+     def get_iso_book_result_cb(self, getter, tempfile, suggested_name):
++        # FIXME This doesn't work anymore. After Exception, Callback is not called.
+         if self.download_content_type.startswith('text/html'):
+             # got an error page instead
+             self.download_book("http://www.gutenberg.org/dirs" +

@@ -257,6 +257,10 @@
                 },
                 {
                     "type": "patch",
+                    "path": "readetexts-fix-dl.patch"
+                },
+                {
+                    "type": "patch",
                     "path": "readetexts-info.patch"
                 }
             ],
