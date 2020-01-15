@@ -249,6 +249,10 @@
                 },
                 {
                     "type": "patch",
+                    "path": "readetexts-fix-find.patch"
+                },
+                {
+                    "type": "patch",
                     "path": "readetexts-monitors.patch"
                 },
                 {
