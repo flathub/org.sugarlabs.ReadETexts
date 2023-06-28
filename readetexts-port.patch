@@ -1,16 +1,16 @@
 diff --git a/ReadEtextsActivity.py b/ReadEtextsActivity.py
-index e8b8022..25f466e 100644
+index 7c6528b..5615318 100644
 --- a/ReadEtextsActivity.py
 +++ b/ReadEtextsActivity.py
-@@ -23,6 +23,7 @@ import rtfconvert
- import xopower
+@@ -24,6 +24,7 @@ import xopower
  import speech
+ import urllib.error
  import pickle as pickle
 +import shutil
  from gi.repository import TelepathyGLib
  from gi.repository import GObject
  import dbus
-@@ -33,12 +34,10 @@ from sugar3.graphics.toggletoolbutton import ToggleToolButton
+@@ -34,12 +35,10 @@ from sugar3.graphics.toggletoolbutton import ToggleToolButton
  from sugar3.graphics.menuitem import MenuItem
  from sugar3.graphics.toolbutton import ToolButton
  from readtoolbar import ViewToolbar, EditToolbar,  BooksToolbar,  SpeechToolbar
@@ -24,7 +24,7 @@ index e8b8022..25f466e 100644
  from sugar3 import profile
  from sugar3.graphics import style
  from gi.repository import Gdk
-@@ -52,6 +51,8 @@ import gi
+@@ -53,6 +52,8 @@ import gi
  gi.require_version('Gtk', '3.0')
  gi.require_version('TelepathyGLib', '0.12')
  
@@ -33,7 +33,7 @@ index e8b8022..25f466e 100644
  
  PAGE_SIZE = 38
  TOOLBAR_READ = 2
-@@ -187,14 +188,14 @@ class ReadURLDownloader(network.GlibURLDownloader):
+@@ -188,14 +189,14 @@ class ReadURLDownloader(network.GlibURLDownloader):
  READ_STREAM_SERVICE = 'read-activity-http'
  
  
@@ -50,7 +50,7 @@ index e8b8022..25f466e 100644
  
          self.fileserver = None
          self.object_id = handle.object_id
-@@ -322,7 +323,7 @@ class ReadEtextsActivity(activity.Activity):
+@@ -323,7 +324,7 @@ class ReadEtextsActivity(activity.Activity):
          self.tempfile = None
          self.close_requested = False
          self.connect("shared", self.shared_cb)
@@ -59,7 +59,7 @@ index e8b8022..25f466e 100644
          self.port = 1024 + (h % 64511)
  
          self.is_received_document = False
-@@ -355,12 +356,12 @@ class ReadEtextsActivity(activity.Activity):
+@@ -356,12 +357,12 @@ class ReadEtextsActivity(activity.Activity):
  
      def close(self, **kwargs):
          self.speech_toolbar.stop()
@@ -74,7 +74,7 @@ index e8b8022..25f466e 100644
          toolbar_box.toolbar.insert(activity_button, 0)
          activity_button.show()
  
-@@ -972,7 +973,7 @@ class ReadEtextsActivity(activity.Activity):
+@@ -973,7 +974,7 @@ class ReadEtextsActivity(activity.Activity):
          logger.debug('ReadEtextsActivity.read_file: %s', file_path)
          tempfile = os.path.join(self.get_activity_root(),
                                  'instance', 'tmp%i' % time.time())
@@ -83,7 +83,7 @@ index e8b8022..25f466e 100644
          self.tempfile = tempfile
          self.load_document(self.tempfile)
  
-@@ -1118,43 +1119,20 @@ class ReadEtextsActivity(activity.Activity):
+@@ -1119,43 +1120,20 @@ class ReadEtextsActivity(activity.Activity):
  
      def write_file(self, filename):
          "Save meta data for the file."
@@ -141,7 +141,7 @@ index e8b8022..25f466e 100644
  
      def can_close(self):
          self.close_requested = True
-@@ -1304,30 +1282,13 @@ class ReadEtextsActivity(activity.Activity):
+@@ -1316,30 +1294,13 @@ class ReadEtextsActivity(activity.Activity):
          self.tempfile = tempfile
          file_path = os.path.join(self.get_activity_root(), 'instance',
                                   '%i' % time.time())

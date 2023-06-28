@@ -74,7 +74,7 @@
                 {
                     "type": "git",
                     "url": "https://github.com/sugarlabs/readetexts.git",
-                    "commit": "1c96b2e6899412dfbac2f32f722731e3ed5adb97"
+                    "commit": "bdb0e89177a9ef3d8747459dcc94a1a4dd170541"
                 },
                 {
                     "type": "patch",
@@ -91,10 +91,6 @@
                 {
                     "type": "patch",
                     "path": "readetexts-fix-save.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "readetexts-fix-dl.patch"
                 },
                 {
                     "type": "patch",
