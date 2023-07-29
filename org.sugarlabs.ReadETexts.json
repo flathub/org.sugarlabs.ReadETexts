@@ -74,7 +74,12 @@
                 {
                     "type": "git",
                     "url": "https://github.com/sugarlabs/readetexts.git",
-                    "commit": "bdb0e89177a9ef3d8747459dcc94a1a4dd170541"
+                    "tag": "v28",
+                    "commit": "da7fddfaf81b7ba01f22ae6aa3eb7d4ef403c0e6",
+                     "x-checker-data": {
+                         "type": "git",
+                         "tag-pattern": "^v([\\d.]+)$"
+                     }
                 },
                 {
                     "type": "patch",
