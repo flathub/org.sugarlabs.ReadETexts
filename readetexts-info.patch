@@ -2,7 +2,7 @@ diff --git a/activity/activity.info b/activity/activity.info
 index 14fc85a..3f4cdf2 100644
 --- a/activity/activity.info
 +++ b/activity/activity.info
-@@ -1,12 +1,19 @@
+@@ -1,12 +1,20 @@
  [Activity]
  name = Read ETexts
 -bundle_id = org.laptop.sugar.ReadEtextsActivity
@@ -23,5 +23,6 @@ index 14fc85a..3f4cdf2 100644
 +url = https://help.sugarlabs.org/en/read_etexts.html
 +update_contact = tch@sugarlabs.org
 +developer_name = Sugar Labs Community
++developer_id = org.sugarlabs
 +screenshots = http://activities.sugarlabs.org/en-US/sugar/images/p/815/1335020254
  repository = https://github.com/sugarlabs/readetexts
