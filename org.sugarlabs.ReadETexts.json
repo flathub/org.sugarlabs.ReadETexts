@@ -1,9 +1,9 @@
 {
     "app-id": "org.sugarlabs.ReadETexts",
     "base": "org.sugarlabs.BaseApp",
-    "base-version": "24.04",
+    "base-version": "26.04",
     "runtime": "org.gnome.Platform",
-    "runtime-version": "46",
+    "runtime-version": "50",
     "sdk": "org.gnome.Sdk",
     "separate-locales": false,
     "command": "sugarapp",
@@ -21,12 +21,16 @@
         "/lib/pkgconfig",
         "/share/aclocal",
         "/share/info",
-        "/share/man"
+        "/share/man",
+        "*.la",
+        "*.a"
+    ],
+    "cleanup-commands": [
+        "rm -rf /app/share/gir-1.0"
     ],
     "modules": [
         {
             "name": "espeak-ng",
-            "cleanup": [ "*.la" ],
             "no-parallel-make": true,
             "build-options": {
                 "ldflags": "-Wl,--allow-multiple-definition"
@@ -83,23 +87,13 @@
                 },
                 {
                     "type": "patch",
-                    "path": "readetexts-port.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "readetexts-fix-find.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "readetexts-monitors.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "readetexts-fix-save.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "readetexts-info.patch"
+                    "paths": [
+                        "patches/readetexts-port.patch",
+                        "patches/readetexts-fix-find.patch",
+                        "patches/readetexts-monitors.patch",
+                        "patches/readetexts-fix-save.patch",
+                        "patches/readetexts-info.patch"
+                    ]
                 }
             ],
             "post-install": [
